@@ -32,6 +32,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
+                                <NavLink :href="route('product')" :active="route().current('product')">
+                                    Product
+                                </NavLink>
                             </div>
                         </div>
 
@@ -139,7 +142,17 @@ const showingNavigationDropdown = ref(false);
             <!-- Page Heading -->
             <header class="bg-white shadow" v-if="$slots.header">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    <slot name="header" />
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <slot name="header" />
+                            <div class="page-title-subheading">
+                                View, create, update, delete and manage.
+                            </div>
+                        </div>
+                        <button v-if="$slots.button">
+                            <slot name="button" />
+                        </button>
+                    </div>
                 </div>
             </header>
 
