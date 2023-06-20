@@ -16,9 +16,6 @@ class ApiProductController extends Controller
         return ProductResource::collection($products);
     }
 
-     /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreProductRequest $request)
     {
         $product = $request->validated();
@@ -30,5 +27,36 @@ class ApiProductController extends Controller
         }
         Product::create($product);
         return response()->json(['success' => 'Add product successfully!']);
+    }
+
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return new ProductResource($product);
+    }
+
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+        return $product;
+    }
+
+    public function update(UpdateProductRequest $request, string $id)
+    {
+        $product = Product::findOrFail($id);
+        $data = $request->validated();
+
+        // if($request->image){
+        //     $image = $request->image;
+        //     $nameImage = $image->hashName();
+        //     $image->storeAs('public/uploads/product', $nameImage);
+        //     $data['image'] = 'uploads/product/'. $nameImage;
+
+        //     Storage::disk('public')->delete($product->image);
+        // }
+
+        // $product->update($data);
+        return response()->json(['success' => 'Update product successfully!']);
+
     }
 }

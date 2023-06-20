@@ -33,6 +33,8 @@ Route::prefix('admin')->group( function () {
 
     Route::get('/product', [ProductController::class, 'index'])->name('product');
     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
+    Route::get('/product/show/{id}', [ProductController::class, 'show'])->name('product.show');
+    Route::get('/product/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
 });
 
 Route::get('/dashboard', function () {

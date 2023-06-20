@@ -20,7 +20,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return inertia('Admin/Product/Create');
+        return inertia('Admin/Product/Form');
     }
 
     /**
@@ -28,7 +28,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return inertia('Admin/Product/Show');
     }
 
     /**
@@ -36,15 +36,7 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        return inertia('Admin/Product/Form');
     }
 
     /**

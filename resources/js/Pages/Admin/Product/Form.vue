@@ -1,8 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { ref, reactive } from 'vue';
-import axios from 'axios';
+import { ref, reactive, onMounted } from 'vue';
 import InputError from '@/Components/InputError.vue';
 
 const product = reactive({
@@ -14,27 +12,67 @@ const product = reactive({
 
 const errors = ref([]);
 
-function uploadImage(e){
-    product.image = e.target.files[0]
+const uploadImage = (e) => {
+    product.image = e.target.files[0] ?? null
 }
 
-function createProduct(){
+//create or update function
+function saveProduct(){
     const headers = { 'content-type' : 'multipart/form-data'}
-    axios.post('/api/product/create', product, {headers})
+    
+    if(product.id){
+        console.log(product)
+        axios.post(`/api/product/update/${product.id}`, product, {headers})
+        .then(res => {
+            if(res.data.success){
+                alert(res.data.success)
+            }
+        })
+        .catch(error => {
+            errors.value = error.response.data.errors;
+        })
+        
+    }
+    else {
+        axios.post('/api/product/create', product, {headers})
+        .then(res => {
+            if(res.data.success){
+                window.location = route('product');
+            }
+        })
+        .catch(error => {
+            errors.value = error.response.data.errors;
+        })
+    }
+
+}
+
+//get data product
+const getProduct = (product_id) => {
+    axios.get(`/api/product/edit/${product_id}`)
     .then(res => {
-        if(res.data.success){
-            window.location = route('product');
-        }
+        product.id = res.data.id
+        product.name = res.data.name
+        product.price = res.data.price
+        product.description = res.data.description
+        product.image = res.data.image
+
     })
     .catch(error => {
-        errors.value = error.response.data.errors;
+        console.log(error);
     })
 }
 
+onMounted(()=>{
+    const product_id = route().params.id;
+    if(product_id){
+        getProduct(product_id)
+    }
+})
 </script>
 
 <template>
-    <Head title="Product List" />
+    <Head title="Product" />
 
     <AuthenticatedLayout>
         <template #header>
@@ -47,7 +85,7 @@ function createProduct(){
                     <div class="col-md-12">
                         <div class="main-card mb-3 card">
                             <div class="card-body">
-                                <form @submit.prevent="createProduct" >
+                                <form @submit.prevent="saveProduct" >
                                     <div class="position-relative row form-group">
                                         <label for="name" class="col-md-3 text-md-right col-form-label">Name</label>
                                         <div class="col-md-9 col-xl-8">
@@ -65,11 +103,11 @@ function createProduct(){
                                             class="col-md-3 text-md-right col-form-label">Price</label>
                                         <div class="col-md-9 col-xl-8">
                                             <input name="price" id="price"
-                                                placeholder="Price" type="number" 
+                                                placeholder="Price"
                                                 class="form-control" 
                                                 :class="{'border border-danger': errors.price}" 
                                                 v-model="product.price" />
-                                                <InputError v-if="errors.price" class="mt-1" :message="errors.price[0]" />
+                                            <InputError v-if="errors.price" class="mt-1" :message="errors.price[0]" />
                                         </div>
                                     </div>
 
@@ -92,6 +130,9 @@ function createProduct(){
                                         <div class="col-md-9 col-xl-8 ">
                                             <input name="image" id="image" type="file" class="form-control border-0 p-0" @change="uploadImage">
                                             <InputError v-if="errors.image" class="mt-1" :message="errors.image[0]" />
+                                            <div v-if="product.id">
+                                                <img :src=" '/storage/'+ product.image" :alt="product.name" style="width: 100px;">
+                                            </div>
                                         </div>
                                     </div>
 

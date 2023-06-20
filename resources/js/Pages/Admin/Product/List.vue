@@ -1,6 +1,5 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 
@@ -93,7 +92,7 @@ onMounted(() => {
                                                                 <img style="height: 60px;"
                                                                     data-toggle="tooltip" title="Image"
                                                                     data-placement="bottom"
-                                                                    :src=" '/storage/' + product.image " 
+                                                                    :src=" product.image " 
                                                                     :alt="product.name">
                                                             </div>
                                                         </div>
@@ -105,11 +104,11 @@ onMounted(() => {
                                             </td>
                                             <td class="text-center">{{ product.price }} VNĐ</td>
                                             <td class="text-center">
-                                                <a href="#"
+                                                <a :href="route('product.show', {id : product.id})"
                                                     class="btn btn-hover-shine btn-outline-primary border-0 btn-sm">
                                                     Details
                                                 </a>
-                                                <a href="#" data-toggle="tooltip" title="Edit"
+                                                <a :href="route('product.edit', {id : product.id })" data-toggle="tooltip" title="Edit"
                                                     data-placement="bottom" class="btn btn-outline-warning border-0 btn-sm">
                                                     <span class="btn-icon-wrapper opacity-8">
                                                         <font-awesome-icon icon="fa fa-edit fa-w-20"/>
