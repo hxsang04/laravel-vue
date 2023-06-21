@@ -10,10 +10,12 @@ const product = reactive({
     image: '',
 });
 
+const current_image = ref({})
+
 const errors = ref([]);
 
 const uploadImage = (e) => {
-    product.image = e.target.files[0] ?? null
+    product.image = e.target.files[0]
 }
 
 //create or update function
@@ -25,7 +27,7 @@ function saveProduct(){
         axios.post(`/api/product/update/${product.id}`, product, {headers})
         .then(res => {
             if(res.data.success){
-                alert(res.data.success)
+                window.location = route('product.show', product.id);
             }
         })
         .catch(error => {
@@ -55,7 +57,7 @@ const getProduct = (product_id) => {
         product.name = res.data.name
         product.price = res.data.price
         product.description = res.data.description
-        product.image = res.data.image
+        current_image.value = res.data.image
 
     })
     .catch(error => {
@@ -69,6 +71,7 @@ onMounted(()=>{
         getProduct(product_id)
     }
 })
+
 </script>
 
 <template>
@@ -131,7 +134,7 @@ onMounted(()=>{
                                             <input name="image" id="image" type="file" class="form-control border-0 p-0" @change="uploadImage">
                                             <InputError v-if="errors.image" class="mt-1" :message="errors.image[0]" />
                                             <div v-if="product.id">
-                                                <img :src=" '/storage/'+ product.image" :alt="product.name" style="width: 100px;">
+                                                <img :src=" '/storage/'+ current_image" :alt="product.name" style="width: 100px;">
                                             </div>
                                         </div>
                                     </div>

@@ -39,11 +39,9 @@ class ProductController extends Controller
         return inertia('Admin/Product/Form');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+    public function trash(){
+        return inertia('Admin/Product/Trash');
+       
     }
+
 }

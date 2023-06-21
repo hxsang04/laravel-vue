@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiProductController;
+use App\Models\Product;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,9 @@ Route::post('/product/create', [ApiProductController::class, 'store'])->name('ap
 Route::get('/product/show/{id}', [ApiProductController::class, 'show'])->name('api.product.show');
 Route::get('/product/edit/{id}', [ApiProductController::class, 'edit'])->name('api.product.edit');
 Route::post('/product/update/{id}', [ApiProductController::class, 'update'])->name('api.product.update');
+Route::post('/product/delete/{id}', [ApiProductController::class, 'delete'])->name('api.product.delete');
+Route::get('/products/trash', [ApiProductController::class, 'trash'])->name('api.products.trash');
+Route::post('/product/restore/{id}', [ApiProductController::class, 'restore'])->name('api.product.restore');
+Route::post('/product/remove/{id}', [ApiProductController::class, 'remove'])->name('api.product.remove');
+Route::get('/product/export', [ApiProductController::class, 'export'])->name('api.product.export');
+

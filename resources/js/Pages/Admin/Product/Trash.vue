@@ -1,15 +1,14 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import TableHeader from '@/Components/TableHeader.vue';
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 
 const products = ref([])
 const paginate = ref([])
-const keyword = ref('')
 
-const getProducts = (page = 1) => {
-    axios.get(`/api/products?search=${keyword.value}&page=${page}`)
+const getTrashProducts = (page = 1) => {
+    axios.get(`/api/products/trash?page=${page}`)
     .then(res => {
         products.value = res.data;
         paginate.value = res.data.meta;
@@ -19,53 +18,40 @@ const getProducts = (page = 1) => {
     })
 }
 
-function deteleProduct(product_id){
-    if(confirm('Do you really want to delete this item?')){
-        axios.post(`/api/product/delete/${product_id}`)
+function restoreProduct(product_id){
+    if(confirm('Do you really want to restore this item?')){
+        axios.post(`/api/product/restore/${product_id}`)
         .then(res => {
             console.log(res.data.success)
-            getProducts()
+            getTrashProducts()
         })
         .catch(error => {
-            console.log(error.response.data);
+            console.log(error);
         })
     }
 }
 
-function importProduct(){
-    axios.post('/api/product/import')
-    .then(res => {
-        console.log(res.data.success)
-        getProducts()
-    })
-    .catch(error => {
-        console.log(error.response.data);
-    })
-}
-
-function exportProduct(){
-    axios.get('/api/product/export', { responseType: 'blob' })
-    .then(res => {
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'products.xlsx');
-        document.body.appendChild(link);
-        link.click();
-    })
-    .catch(error => {
-        console.log(error.response.data);
-    })
+function removeProduct(product_id){
+    if(confirm('Do you really want to remove this item?')){
+        axios.post(`/api/product/remove/${product_id}`)
+        .then(res => {
+            console.log(res.data.success)
+            getTrashProducts()
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
 }
 
 onMounted(() => {
-    getProducts()
+    getTrashProducts()
 })
 
 </script>
 
 <template>
-    <Head title="Product List" />
+    <Head title="Product Trash" />
 
     <AuthenticatedLayout>
         <template #header>
@@ -89,11 +75,9 @@ onMounted(() => {
                     <div class="col-md-12">
                         <div class="main-card mb-3 card">
                             
-                            <TableHeader :href="route('product.trash')" 
-                                @search="getProducts" v-model="keyword"
-                                @import="importProduct" @export="exportProduct">
-                                <font-awesome-icon icon="fa fa-trash" />
-                                <span class="pl-1">Trash</span>
+                            <TableHeader :href="route('product')">
+                                <font-awesome-icon icon="fa fa-arrow-left"/>
+                                <span class="pl-1">Back</span>
                             </TableHeader>
 
                             <div class="table-responsive">
@@ -131,20 +115,17 @@ onMounted(() => {
                                             </td>
                                             <td class="text-center">{{ product.price }} VNĐ</td>
                                             <td class="text-center">
-                                                <a :href="route('product.show', {id : product.id})"
-                                                    class="btn btn-hover-shine btn-outline-primary border-0 btn-sm">
-                                                    Details
-                                                </a>
-                                                <a :href="route('product.edit', {id : product.id })" data-toggle="tooltip" title="Edit"
+                                                <button @click="restoreProduct(product.id)"
+                                                    data-toggle="tooltip" title="Restore"
                                                     data-placement="bottom" class="btn btn-outline-warning border-0 btn-sm">
                                                     <span class="btn-icon-wrapper opacity-8">
-                                                        <font-awesome-icon icon="fa fa-edit fa-w-20"/>
+                                                        <font-awesome-icon icon="fa fa-trash-restore fa-w-20"/>
                                                     </span>
-                                                </a>
+                                                </button>
                                                 <button class="btn btn-hover-shine btn-outline-danger border-0 btn-sm"
-                                                    data-toggle="tooltip" title="Delete"
+                                                    data-toggle="tooltip" title="Remove"
                                                     data-placement="bottom"
-                                                    @click="deteleProduct(product.id)">
+                                                    @click="removeProduct(product.id)">
                                                     <span class="btn-icon-wrapper opacity-8">
                                                         <font-awesome-icon icon="fa fa-trash fa-w-20" />
                                                     </span>
@@ -188,7 +169,7 @@ onMounted(() => {
                                         <Bootstrap5Pagination
                                             :data="products"
                                             :limit="1"
-                                            @pagination-change-page="getProducts"
+                                            @pagination-change-page="getTrashProducts"
                                         />
                                     </div>
                                 </nav>

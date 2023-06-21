@@ -73,6 +73,13 @@ onMounted(() => {
                                         <p>{{ product.created_at }}</p>
                                     </div>
                                 </div>
+
+                                <div class="position-relative row form-group">
+                                    <label for="description" class="col-md-3 text-md-right col-form-label">Updated at</label>
+                                    <div class="col-md-9 col-xl-8">
+                                        <p>{{ product.updated_at }}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
