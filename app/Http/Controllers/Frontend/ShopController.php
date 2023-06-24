@@ -10,4 +10,9 @@ class ShopController extends Controller
     public function shop(){
         return inertia('Frontend/Index/Shop');
     }
+
+    public function productDetail(){
+        return inertia('Frontend/Product/Detail');
+    }
+
 }

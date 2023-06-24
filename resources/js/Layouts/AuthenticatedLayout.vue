@@ -145,13 +145,10 @@ const showingNavigationDropdown = ref(false);
                     <div class="d-flex justify-content-between">
                         <div>
                             <slot name="header" />
-                            <div class="page-title-subheading">
-                                View, create, update, delete and manage.
-                            </div>
                         </div>
-                        <button v-if="$slots.button">
+                        <div v-if="$slots.button">
                             <slot name="button" />
-                        </button>
+                        </div>
                     </div>
                 </div>
             </header>

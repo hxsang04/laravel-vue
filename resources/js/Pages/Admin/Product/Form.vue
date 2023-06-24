@@ -23,7 +23,6 @@ function saveProduct(){
     const headers = { 'content-type' : 'multipart/form-data'}
     
     if(product.id){
-        console.log(product)
         axios.post(`/api/product/update/${product.id}`, product, {headers})
         .then(res => {
             if(res.data.success){

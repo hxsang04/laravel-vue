@@ -10,6 +10,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Storage;
 use App\Exports\ProductsExport;
+use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ApiProductController extends Controller
@@ -22,7 +23,7 @@ class ApiProductController extends Controller
                 $query->where('name', 'like', '%'.$keyword.'%');
             })
             ->orderByDesc('id')
-            ->paginate(5);
+            ->paginate(6);
         return ProductResource::collection($products);
     }
 
@@ -98,12 +99,20 @@ class ApiProductController extends Controller
     public function remove(string $id)
     {
         $product = Product::withTrashed()->findOrFail($id);
+        Storage::disk('public')->delete($product->image);
         $product->forceDelete();
         return response()->json(['success' => 'Remove product successfully!']);    
     }
 
     public function export(){
         return Excel::download(new ProductsExport, 'products.xlsx');
+    }
+
+    public function import(Request $request){
+        $request->validate(['fileExcel' => 'required|mimes:xls,xlsx,xml,csv']);
+        Excel::import(new ProductsImport, $request->file('fileExcel'));
+        
+        return response()->json(['success' => 'Import product successfully!']);    
     }
 
 }

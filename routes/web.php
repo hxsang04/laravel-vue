@@ -40,7 +40,10 @@ Route::prefix('admin')->group( function () {
 });
 
 Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
-
+Route::get('/product/{id}', [ShopController::class, 'productDetail'])->name('product.detail');
+Route::get('/session', function(){
+    dd (session('cart'));
+});
 
 
 Route::get('/dashboard', function () {

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiProductController;
+use App\Http\Controllers\Api\ApiCartController;
 use App\Models\Product;
 
 /*
@@ -30,4 +31,7 @@ Route::get('/products/trash', [ApiProductController::class, 'trash'])->name('api
 Route::post('/product/restore/{id}', [ApiProductController::class, 'restore'])->name('api.product.restore');
 Route::post('/product/remove/{id}', [ApiProductController::class, 'remove'])->name('api.product.remove');
 Route::get('/product/export', [ApiProductController::class, 'export'])->name('api.product.export');
+Route::post('/product/import', [ApiProductController::class, 'import'])->name('api.product.import');
 
+Route::get('/carts', [ApiCartController::class, 'cart'])->name('api.cart');
+Route::post('/add-to-cart', [ApiCartController::class, 'addToCart'])->name('api.cart.add');

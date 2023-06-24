@@ -30,15 +30,10 @@ defineProps({
         </div>
 
         <a class="ml-5 text-decoration-none border border-primary p-2" :href="href">
-            <slot />
+            <slot name="link" />
         </a>
-
         <div class="btn-actions-pane-right">
-            <div role="group" class="btn-group-sm btn-group">
-                <input type="file" />
-                <button @click="$emit('import')" class="btn btn-focus ml-2">Import</button>
-                <button @click="$emit('export')" class="btn btn-focus ml-2">Export</button>
-            </div>
+            <slot />
         </div>
     </div>
 </template>

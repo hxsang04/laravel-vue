@@ -3,10 +3,13 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import TableHeader from '@/Components/TableHeader.vue';
 import { ref, onMounted } from 'vue'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import InputError from '@/Components/InputError.vue';
 
 const products = ref([])
 const paginate = ref([])
 const keyword = ref('')
+const fileExcel = ref('')
+const errors = ref('')
 
 const getProducts = (page = 1) => {
     axios.get(`/api/products?search=${keyword.value}&page=${page}`)
@@ -32,14 +35,22 @@ function deteleProduct(product_id){
     }
 }
 
+const handleFileChange = (e) => {
+        fileExcel.value = e.target.files[0];
+    };
+
 function importProduct(){
-    axios.post('/api/product/import')
+    const formData = new FormData();
+    formData.append('fileExcel', fileExcel.value);
+
+    axios.post('/api/product/import', formData)
     .then(res => {
         console.log(res.data.success)
         getProducts()
     })
     .catch(error => {
-        console.log(error.response.data);
+        errors.value = error.response.data.errors;
+
     })
 }
 
@@ -89,11 +100,26 @@ onMounted(() => {
                     <div class="col-md-12">
                         <div class="main-card mb-3 card">
                             
-                            <TableHeader :href="route('product.trash')" 
-                                @search="getProducts" v-model="keyword"
-                                @import="importProduct" @export="exportProduct">
-                                <font-awesome-icon icon="fa fa-trash" />
-                                <span class="pl-1">Trash</span>
+                            <TableHeader :href="route('product.trash')" @search="getProducts" v-model="keyword">
+                                <template #link>
+                                    <font-awesome-icon icon="fa fa-trash" />
+                                    <span class="pl-1">Trash</span>
+                                </template>
+                                <div class="btn-actions-pane-right">
+                                    <div role="group" class="btn-group-sm btn-group">
+                                        <div>
+                                            <input type="file" @change="handleFileChange"/>
+                                            <span>
+                                                <InputError v-if="errors.fileExcel" style="margin-bottom:-30px;" class="text-lowercase" :message="errors.fileExcel[0]" />
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <button @click="importProduct" class="btn btn-focus ml-2">Import</button>
+                                            <button @click="exportProduct" class="btn btn-focus ml-2">Export</button>
+                                        </div>
+                                    </div>
+                                </div> 
+                                
                             </TableHeader>
 
                             <div class="table-responsive">

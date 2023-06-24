@@ -2,6 +2,7 @@ import './bootstrap';
 import '../css/app.css';
 import '@/assets/admin/css/main.css';
 import '@/assets/admin/css/my_style.css';
+import '@/assets/frontend/css/style.css';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp, Head } from '@inertiajs/vue3';
@@ -12,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
+import ThemifyIcon from "vue-themify-icons";
 
 library.add(fas, far, fab)
 
@@ -23,6 +25,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .component('font-awesome-icon', FontAwesomeIcon)
+            .component('ThemifyIcon', ThemifyIcon)
             .component('Head', Head)
             .use(plugin)
             .use(ZiggyVue, Ziggy)

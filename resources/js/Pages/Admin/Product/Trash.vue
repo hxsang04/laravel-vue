@@ -76,8 +76,10 @@ onMounted(() => {
                         <div class="main-card mb-3 card">
                             
                             <TableHeader :href="route('product')">
-                                <font-awesome-icon icon="fa fa-arrow-left"/>
-                                <span class="pl-1">Back</span>
+                                <template #link>
+                                    <font-awesome-icon icon="fa fa-arrow-left"/>
+                                    <span class="pl-1">Back</span>
+                                </template>
                             </TableHeader>
 
                             <div class="table-responsive">
