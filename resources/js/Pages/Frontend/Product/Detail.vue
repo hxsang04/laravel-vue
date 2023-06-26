@@ -19,7 +19,7 @@ function addToCart(product_id){
     axios.post('/api/add-to-cart', 
     {
         product_id,
-        quantity: quantity.value
+        quantity: quantity.value,
     })
     .then(res =>{
         console.log(res.data.success)

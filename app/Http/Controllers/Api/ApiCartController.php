@@ -9,7 +9,7 @@ use App\Models\Product;
 class ApiCartController extends Controller
 {
     public function cart(){
-        dd(session('cart'));
+        dd(session()->all());
     }
 
     public function addToCart(Request $request){
@@ -18,13 +18,13 @@ class ApiCartController extends Controller
         $cart = session('cart');
         $product = Product::find($product_id);
 
-        if(isset($cart[$product_id])){
-            $cart[$product_id]['quantity'] += $quantity;
+        if(isset($cart[$product->id])){
+            $cart[$product->id]['quantity'] += $quantity;
             
         }
         else{
-            $cart[$product_id] = [
-                'product_id' => $product_id,
+            $cart[$product->id] = [
+                'product_id' => $product->id,
                 'image' => $product->image,
                 'name' => $product->name,
                 'quantity' => $quantity,
