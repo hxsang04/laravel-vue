@@ -38,6 +38,7 @@ onMounted(() => {
 
 <template>
     <Head title="Product Detail"/>
+    
     <ShopLayout>
         <section class="product-shop spad page-details">
             <div class="container">

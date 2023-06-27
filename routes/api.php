@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiProductController;
 use App\Http\Controllers\Api\ApiCartController;
+use App\Http\Controllers\Api\ApiCheckoutController;
 use App\Models\Product;
 
 /*
@@ -35,3 +36,6 @@ Route::post('/product/import', [ApiProductController::class, 'import'])->name('a
 
 Route::get('/carts', [ApiCartController::class, 'cart'])->name('api.cart');
 Route::post('/add-to-cart', [ApiCartController::class, 'addToCart'])->name('api.cart.add');
+Route::post('/cart/delete/{id}', [ApiCartController::class, 'delete'])->name('api.cart.delete');
+
+Route::post('/place-order', [ApiCheckoutController::class, 'placeOrder'])->name('api.place-order');

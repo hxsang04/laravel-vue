@@ -1,3 +1,8 @@
+<script setup>
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+</script>
+
 <template>
     <header class="header-section">
         <div class="header-top">
@@ -13,7 +18,41 @@
                     </div>
                 </div>
                 <div class="ht-right">
-                    <a href="#" class="login-panel">
+                    <div v-if="$page.props.auth.user" class="login-panel" href="#">
+                        <Dropdown align="right" width="48">
+                            <template #trigger>
+                                <span class="inline-flex rounded-md">
+                                    <button
+                                        type="button"
+                                        class="inline-flex items-center text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                    >
+                                        {{ $page.props.auth.user.name }}
+
+                                        <svg
+                                            class="ml-2 -mr-0.5 h-4 w-4"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd"
+                                            />
+                                        </svg>
+                                    </button>
+                                </span>
+                            </template>
+
+                            <template #content>
+                                <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+                                <DropdownLink :href="route('logout')" method="post" as="button">
+                                    Log Out
+                                </DropdownLink>
+                            </template>
+                        </Dropdown>
+                    </div>
+                    <a v-else :href="route('login')" class="login-panel">
                         <font-awesome-icon icon="fa-solid fa-user" />
                         Login
                     </a>
@@ -32,7 +71,7 @@
                     <div class="col-lg-2 col-md-2">
                         <div class="logo">
                             <a href="./index.html">
-                                <img src="img/logo.png" alt="">
+                                <img src="@/assets/frontend/img/logo.png" alt="">
                             </a>
                         </div>
                     </div>
@@ -52,7 +91,7 @@
                                     <span>1</span>
                                 </a>
                             </li>
-                            <li class="cart-icon"><a href="#">
+                            <li class="cart-icon"><a :href="route('cart')">
                                 <font-awesome-icon icon="cart-shopping" />
                                     <span>3</span>
                                 </a>
@@ -125,6 +164,7 @@
                     <ul>
                         <li><a href="">Home</a></li>
                         <li><a :href="route('shop')">Shop</a></li>
+                        <li><a :href="route('cart')">Cart</a></li>
                         <li><a href="#">Order History</a></li>
                     </ul>
                 </nav>
@@ -142,7 +182,7 @@
                 <div class="col-lg-3">
                     <div class="footer-left">
                         <div class="footer-logo">
-                            <a href="#"><img src="img/footer-logo.png" alt=""></a>
+                            <a href="#"><img src="@/assets/frontend/img/logo.png" alt=""></a>
                         </div>
                         <ul>
                             <li>Address: 60-49 Road 11378 New York</li>

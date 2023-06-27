@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Frontend\ShopController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\Api\ApiCartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,19 +20,12 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
-Route::prefix('admin')->group( function () {
+Route::prefix('admin')->middleware('auth:admin')->group( function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
+    })->name('admin.dashboard');
+
+    Route::get('/profile', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');
 
     Route::get('/product', [ProductController::class, 'index'])->name('product');
     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
@@ -39,12 +34,15 @@ Route::prefix('admin')->group( function () {
     Route::get('/product/trash/', [ProductController::class, 'trash'])->name('product.trash');
 });
 
+
+// Route::get('/dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', [ShopController::class, 'home'])->name('home');
 Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
 Route::get('/product/{id}', [ShopController::class, 'productDetail'])->name('product.detail');
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/carts', [ShopController::class, 'cart'])->name('cart');
+Route::get('/checkout', [ShopController::class, 'checkout'])->name('checkout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -53,3 +51,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/auth_admin.php';
