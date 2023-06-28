@@ -49,7 +49,7 @@ class ApiCartController extends Controller
     protected function totalPrice(){
         $total_price = 0;
         foreach(session('cart') as $item){
-            $total_price += $item['quantity'] * filter_var($item['unit_price'], FILTER_SANITIZE_NUMBER_INT);
+            $total_price += $item['quantity'] * convertToNumber($item['unit_price']);
         }
         session()->put('total_price', number_format($total_price));
     }

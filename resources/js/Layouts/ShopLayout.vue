@@ -1,6 +1,24 @@
 <script setup>
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
+import { ref, onMounted } from 'vue'
+import axios from 'axios';
+
+const carts = ref({})
+
+const getCarts = () => {
+    axios.get('/api/carts')
+    .then(res => {
+        carts.value = res.data
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+
+onMounted(()=> {
+    getCarts()
+})
 </script>
 
 <template>
@@ -93,50 +111,38 @@ import DropdownLink from '@/Components/DropdownLink.vue';
                             </li>
                             <li class="cart-icon"><a :href="route('cart')">
                                 <font-awesome-icon icon="cart-shopping" />
-                                    <span>3</span>
+                                    <span v-if="carts.cart && carts.cart != '' ">{{ Object.keys(carts.cart).length }}</span>
                                 </a>
                                 <div class="cart-hover">
                                     <div class="select-items">
                                         <table>
                                             <tbody>
-                                                <tr>
-                                                    <td class="si-pic"><img src="img/select-product-1.jpg" alt=""></td>
+                                                <tr v-for="cart in carts.cart" :key="cart.product_id">
+                                                    <td class="si-pic"><img width="70" :src="cart.image" :alt="cart.name"></td>
                                                     <td class="si-text">
                                                         <div class="product-selected">
-                                                            <p>$60.00 x 1</p>
-                                                            <h6>Kabino Bedside Table</h6>
+                                                            <p>{{ cart.unit_price }} x {{ cart.quantity}}</p>
+                                                            <h6>{{ cart.name }}</h6>
                                                         </div>
                                                     </td>
                                                     <td class="si-close">
-                                                        <i class="ti-close"></i>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="si-pic"><img src="img/select-product-2.jpg" alt=""></td>
-                                                    <td class="si-text">
-                                                        <div class="product-selected">
-                                                            <p>$60.00 x 1</p>
-                                                            <h6>Kabino Bedside Table</h6>
-                                                        </div>
-                                                    </td>
-                                                    <td class="si-close">
-                                                        <i class="ti-close"></i>
+                                                        <font-awesome-icon icon="fa fa-close"/>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="select-total">
-                                        <span>total:</span>
-                                        <h5>$120.00</h5>
+                                        <span>Total:</span>
+                                        <h5>{{carts.total_price}} VNĐ</h5>
                                     </div>
                                     <div class="select-button">
-                                        <a href="#" class="primary-btn view-card">VIEW CARD</a>
-                                        <a href="#" class="primary-btn checkout-btn">CHECK OUT</a>
+                                        <a :href="route('cart')" class="primary-btn view-card">VIEW CARD</a>
+                                        <a :href="route('checkout')" class="primary-btn checkout-btn">CHECK OUT</a>
                                     </div>
                                 </div>
                             </li>
-                            <li class="cart-price">$150.00</li>
+                            <li class="cart-price">{{carts.total_price}} VNĐ</li>
                         </ul>
                     </div>
                 </div>
@@ -146,7 +152,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
             <div class="container">
                 <div class="nav-depart">
                     <div class="depart-btn">
-                        <i class="ti-menu"></i>
+                        <font-awesome-icon icon="fa-solid fa-bars" />
                         <span>All departments</span>
                         <ul class="depart-hover">
                             <li class="active"><a href="#">Women’s Clothing</a></li>
@@ -162,10 +168,10 @@ import DropdownLink from '@/Components/DropdownLink.vue';
                 </div>
                 <nav class="nav-menu mobile-menu">
                     <ul>
-                        <li><a href="">Home</a></li>
+                        <li><a :href="route('home')">Home</a></li>
                         <li><a :href="route('shop')">Shop</a></li>
                         <li><a :href="route('cart')">Cart</a></li>
-                        <li><a href="#">Order History</a></li>
+                        <li><a :href="route('order.history')">Order History</a></li>
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>
@@ -190,10 +196,10 @@ import DropdownLink from '@/Components/DropdownLink.vue';
                             <li>Email: hello.colorlib@gmail.com</li>
                         </ul>
                         <div class="footer-social">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                            <a href="#"><font-awesome-icon icon="fa-brands fa-facebook-f" /></a>
+                            <a href="#"><font-awesome-icon icon="fa-brands fa-twitter" /></a>
+                            <a href="#"><font-awesome-icon icon="fa-brands fa-instagram" /></a>
+                            <a href="#"><font-awesome-icon icon="fa-brands fa-google-plus-g" /></a>
                         </div>
                     </div>
                 </div>
@@ -239,7 +245,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
                             
                         </div>
                         <div class="payment-pic">
-                            <img src="img/payment-method.png" alt="">
+                            <img src="@/assets/frontend/img/payment-method.png" alt="">
                         </div>
                     </div>
                 </div>

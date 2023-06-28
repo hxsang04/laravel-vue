@@ -14,6 +14,11 @@ const getProduct = (product_id) => {
         console.log(error);
     })
 }
+function increase(){
+    if(quantity.value > 1){
+        quantity.value--
+    }
+}
 
 function addToCart(product_id){
     axios.post('/api/add-to-cart', 
@@ -185,10 +190,11 @@ onMounted(() => {
                                         <h4>{{ product.price }} VNĐ</h4>
                                     </div>
                                     <div class="quantity">
+
                                         <div class="pro-qty">
-                                            <span class="dec qtybtn">-</span>
+                                            <span @click="increase" class="dec qtybtn">-</span>
                                             <input type="text" v-model="quantity">
-                                            <span class="inc qtybtn">+</span>
+                                            <span @click="quantity++" class="inc qtybtn">+</span>
                                         </div>
                                         <button @click="addToCart(product.id)" class="primary-btn pd-cart">Add To Cart</button>
                                     </div>

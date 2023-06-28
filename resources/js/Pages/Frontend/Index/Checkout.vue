@@ -27,7 +27,8 @@ const getCarts = () => {
 function placeOrder(){
     axios.post('/api/place-order', order)
     .then(res =>{
-
+        console.log(res.data.success)
+        window.location.href = route('order.history')
     })
     .catch(error =>{
         errors.value = error.response.data.errors;
@@ -51,8 +52,8 @@ onMounted(()=>{
                             <h4>Biiling Details</h4>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <label for="name">Name</label>
-                                    <input v-model="order.name" type="text" id="name" 
+                                    <label for="name">Name<span>*</span></label>
+                                    <input v-model="order.name" type="text" id="name"
                                     :class="{'border border-danger mb-1': errors.name}" >
                                     <InputError v-if="errors.name" :message="errors.name[0]" />
                                 </div>
@@ -89,7 +90,7 @@ onMounted(()=>{
                                         <li>Product <span>Total</span></li>
                                         <li v-for="cart in carts.cart" :key="cart.product_id" class="fw-normal">
                                             {{cart.name}} x {{ cart.quantity }} 
-                                            <span>{{cart.unit_price}} VNĐ</span>
+                                            <span>{{ cart.total }} VNĐ</span>
                                         </li>
                                         <li class="total-price">Total <span>{{carts.total_price}} VNĐ</span></li>
                                     </ul>

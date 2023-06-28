@@ -16,7 +16,7 @@ defineProps({
     <div class="card-header">
         <div>
             <div class="input-group">
-                <input type="text" placeholder="Search everything" class="form-control" 
+                <input type="text" placeholder="Search name" class="form-control" 
                     :value="modelValue"
                     @input="$emit('update:modelValue', $event.target.value)"
                 />

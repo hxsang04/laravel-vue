@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\BuyerController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Frontend\ShopController;
 use Illuminate\Foundation\Application;
@@ -32,17 +34,22 @@ Route::prefix('admin')->middleware('auth:admin')->group( function () {
     Route::get('/product/show/{id}', [ProductController::class, 'show'])->name('product.show');
     Route::get('/product/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
     Route::get('/product/trash/', [ProductController::class, 'trash'])->name('product.trash');
+
+    Route::get('/order', [OrderController::class, 'index'])->name('order');
+    Route::get('/order/show/{id}', [OrderController::class, 'show'])->name('order.show');
+
+    Route::get('/buyer', [BuyerController::class, 'index'])->name('buyer');
+
 });
 
 
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/', [ShopController::class, 'home'])->name('home');
 Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
 Route::get('/product/{id}', [ShopController::class, 'productDetail'])->name('product.detail');
 Route::get('/carts', [ShopController::class, 'cart'])->name('cart');
-Route::get('/checkout', [ShopController::class, 'checkout'])->name('checkout');
+Route::get('/checkout', [ShopController::class, 'checkout'])->middleware('auth')->name('checkout');
+Route::get('/order-history', [ShopController::class, 'orderHistory'])->middleware('auth')->name('order.history');
+Route::get('/order-history/detail/{id}', [ShopController::class, 'orderHistoryDetail'])->middleware('auth')->name('order.history.detail');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

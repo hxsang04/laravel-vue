@@ -26,6 +26,13 @@ class ShopController extends Controller
     public function checkout(){
         return inertia('Frontend/Index/Checkout');
     }
+    public function orderHistory(){
+        return inertia('Frontend/Index/OrderHistory');
+    }
+
+    public function orderHistoryDetail(){
+        return inertia('Frontend/Index/OrderHistoryDetail');
+    }
 
 
 }

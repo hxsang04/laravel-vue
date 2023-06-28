@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiProductController;
 use App\Http\Controllers\Api\ApiCartController;
 use App\Http\Controllers\Api\ApiCheckoutController;
+use App\Http\Controllers\Api\ApiOrderController;
+use App\Http\Controllers\Api\ApiBuyerController;
 use App\Models\Product;
 
 /*
@@ -34,8 +36,17 @@ Route::post('/product/remove/{id}', [ApiProductController::class, 'remove'])->na
 Route::get('/product/export', [ApiProductController::class, 'export'])->name('api.product.export');
 Route::post('/product/import', [ApiProductController::class, 'import'])->name('api.product.import');
 
+Route::get('/orders', [ApiOrderController::class, 'orders'])->name('api.orders');
+Route::get('/order/show/{id}', [ApiOrderController::class, 'show'])->name('api.order.show');
+Route::post('/order/delete/{id}', [ApiOrderController::class, 'delete'])->name('api.order.delete');
+Route::get('/order/export', [ApiOrderController::class, 'export'])->name('api.order.export');
+
+Route::get('/buyers', [ApiBuyerController::class, 'buyers'])->name('api.buyers');
+Route::get('/buyer/export', [ApiBuyerController::class, 'export'])->name('api.buyer.export');
+
 Route::get('/carts', [ApiCartController::class, 'cart'])->name('api.cart');
 Route::post('/add-to-cart', [ApiCartController::class, 'addToCart'])->name('api.cart.add');
 Route::post('/cart/delete/{id}', [ApiCartController::class, 'delete'])->name('api.cart.delete');
-
 Route::post('/place-order', [ApiCheckoutController::class, 'placeOrder'])->name('api.place-order');
+Route::get('/order-history', [ApiOrderController::class, 'orderHistory'])->name('api.order-history');
+

@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 import axios from 'axios';
 
-const carts = ref([])
+const carts = ref({})
 
 const getCarts = () => {
     axios.get('/api/carts')
@@ -40,7 +40,7 @@ onMounted(()=>{
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div v-if="carts.cart" class="cart-table">
+                        <div v-if="carts.cart && carts.cart != '' " class="cart-table">
                             <table>
                                 <thead>
                                     <tr>
@@ -74,19 +74,27 @@ onMounted(()=>{
                                 </tbody>
                             </table>
                         </div>
-                        <div class="row">
+                        <div v-if="carts.cart && carts.cart != '' " class="row">
                             <div class="col-lg-4">
                                 <div class="cart-buttons">
                                     <a :href="route('shop')" class="primary-btn">Continue shopping</a>
                                 </div>
                                 
                             </div>
-                            <div v-if="carts.cart" class="col-lg-4 offset-lg-4">
+                            <div class="col-lg-4 offset-lg-4">
                                 <div class="proceed-checkout">
                                     <ul>
                                         <li class="cart-total">Total <span>{{ carts.total_price }} VNĐ</span></li>
                                     </ul>
                                     <a :href="route('checkout')" class="proceed-btn">PROCEED TO CHECK OUT</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="col-lg-12 text-center">
+                                <h5 class="mb-1">No products</h5>
+                                <div class="cart-buttons">
+                                    <a :href="route('shop')" class="primary-btn">Continue shopping</a>
                                 </div>
                             </div>
                         </div>
