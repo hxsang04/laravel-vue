@@ -134,7 +134,8 @@ onMounted(()=> {
                                     </div>
                                     <div class="select-total">
                                         <span>Total:</span>
-                                        <h5>{{carts.total_price}} VNĐ</h5>
+                                        <h5 v-if="carts.cart">{{carts.total_price}} VNĐ</h5>
+                                        <h5 v-else>0 VNĐ</h5>
                                     </div>
                                     <div class="select-button">
                                         <a :href="route('cart')" class="primary-btn view-card">VIEW CARD</a>
@@ -142,7 +143,8 @@ onMounted(()=> {
                                     </div>
                                 </div>
                             </li>
-                            <li class="cart-price">{{carts.total_price}} VNĐ</li>
+                            <li v-if="carts.cart" class="cart-price">{{carts.total_price}} VNĐ</li>
+                            <li v-else class="cart-price">0 VNĐ</li>
                         </ul>
                     </div>
                 </div>
