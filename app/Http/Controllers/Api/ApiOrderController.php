@@ -34,6 +34,26 @@ class ApiOrderController extends Controller
         return response()->json(['success' => 'Delete product successfully!']);    
     }
 
+    public function trash(){
+        $orders = Order::onlyTrashed()->orderByDesc('id')->paginate(6);
+        return OrderResource::collection($orders);
+    }
+
+    public function restore(string $id)
+    {
+        $order = Order::withTrashed()->findOrFail($id);
+        if(isset($order)){
+            $order->restore();
+            return response()->json(['success' => 'Restore order successfully!']);    
+        }
+    }
+    public function remove(string $id)
+    {
+        $order = order::withTrashed()->findOrFail($id);
+        $order->forceDelete();
+        return response()->json(['success' => 'Remove order successfully!']);    
+    }
+
     public function export(){
         return Excel::download(new OrdersExport, 'orders.xlsx');
     }

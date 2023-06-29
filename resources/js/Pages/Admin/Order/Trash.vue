@@ -1,17 +1,16 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import TableHeader from '@/Components/TableHeader.vue';
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 
-const buyers = ref({})
+const orders = ref([])
 const paginate = ref([])
-const keyword = ref('')
 
-const getBuyers = (page = 1) => {
-    axios.get(`/api/buyers?search=${keyword.value}&page=${page}`)
+const getTrashOrders = (page = 1) => {
+    axios.get(`/api/orders/trash?page=${page}`)
     .then(res => {
-        buyers.value = res.data;
+        orders.value = res.data;
         paginate.value = res.data.meta;
     })
     .catch(error => {
@@ -19,12 +18,12 @@ const getBuyers = (page = 1) => {
     })
 }
 
-function deleteBuyer(order_id){
-    if(confirm('Do you really want to delete this item?')){
-        axios.post(`/api/buyer/delete/${order_id}`)
+function restoreOrder(product_id){
+    if(confirm('Do you really want to restore this item?')){
+        axios.post(`/api/order/restore/${product_id}`)
         .then(res => {
             console.log(res.data.success)
-            getBuyers()
+            getTrashOrders()
         })
         .catch(error => {
             console.log(error);
@@ -32,54 +31,44 @@ function deleteBuyer(order_id){
     }
 }
 
-function exportBuyer(){
-    axios.get('/api/buyer/export', { responseType: 'blob' })
-    .then(res => {
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'buyers.xlsx');
-        document.body.appendChild(link);
-        link.click();
-    })
-    .catch(error => {
-        console.log(error.response.data);
-    })
+function removeOrder(product_id){
+    if(confirm('Do you really want to remove this item?')){
+        axios.post(`/api/order/remove/${product_id}`)
+        .then(res => {
+            console.log(res.data.success)
+            getTrashOrders()
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
 }
 
 onMounted(() => {
-    getBuyers()
+    getTrashOrders()
 })
 
 </script>
 
 <template>
-    <Head title="Buyer List" />
+    <Head title="Order Trash" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Buyer</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Order</h2>
         </template>
-        
+
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="main-card mb-3 card">
                             
-                            <TableHeader :href="route('buyer.trash')" @search="getBuyers" v-model="keyword">
+                            <TableHeader :href="route('order')">
                                 <template #link>
-                                    <font-awesome-icon icon="fa fa-trash" />
-                                    <span class="pl-1">Trash</span>
+                                    <font-awesome-icon icon="fa fa-arrow-left"/>
+                                    <span class="pl-1">Back</span>
                                 </template>
-                                <div class="btn-actions-pane-right">
-                                    <div role="group" class="btn-group-sm btn-group">
-                                        <div>
-                                            <button @click="exportBuyer" class="btn btn-focus ml-2">Export</button>
-                                        </div>
-                                    </div>
-                                </div> 
-                                
                             </TableHeader>
 
                             <div class="table-responsive">
@@ -88,34 +77,44 @@ onMounted(() => {
                                         <tr>
                                             <th class="text-center">ID</th>
                                             <th>Name</th>
-                                            <th>Email</th>
-                                            <th class="text-center">Data/Time</th>
+                                            <th class="text-center">Price</th>
                                             <th class="text-center">Actions</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
-
-                                        <tr v-for="buyer in buyers.data" :key="buyer.id">
-                                            <td class="text-center text-muted">#{{ buyer.id }}</td>
+                                        <tr v-for="order in orders.data" :key="order.id">
+                                            <td class="text-center text-muted">#{{ order.id }}</td>
                                             <td>
-                                                <div class="widget-content p-0">{{ buyer.name }}</div>
+                                                <div class="widget-content p-0">{{ order.name }}</div>
                                             </td>
                                             <td>
-                                                <div class="widget-content p-0">{{ buyer.email }}</div>
+                                                <div class="widget-content p-0">{{ order.phone }}</div>
                                             </td>
-                                            <td class="text-center">{{ buyer.created_at }}</td>
+                                            <td>
+                                                <div class="widget-content p-0">{{ order.address }}</div>
+                                            </td>
+                                            <td class="text-center">{{ order.total_price }} VNĐ</td>
+                                            <td class="text-center">{{ order.created_at }}</td>
                                             <td class="text-center">
+                                                <button @click="restoreOrder(order.id)"
+                                                    data-toggle="tooltip" title="Restore"
+                                                    data-placement="bottom" class="btn btn-outline-warning border-0 btn-sm">
+                                                    <span class="btn-icon-wrapper opacity-8">
+                                                        <font-awesome-icon icon="fa fa-trash-restore fa-w-20"/>
+                                                    </span>
+                                                </button>
                                                 <button class="btn btn-hover-shine btn-outline-danger border-0 btn-sm"
-                                                    data-toggle="tooltip" title="Delete"
+                                                    data-toggle="tooltip" title="Remove"
                                                     data-placement="bottom"
-                                                    @click="deleteBuyer(buyer.id)">
+                                                    @click="removeOrder(order.id)">
                                                     <span class="btn-icon-wrapper opacity-8">
                                                         <font-awesome-icon icon="fa fa-trash fa-w-20" />
                                                     </span>
                                                 </button>
                                             </td>
                                         </tr>
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -149,9 +148,9 @@ onMounted(() => {
                                         </div>
 
                                         <Bootstrap5Pagination
-                                            :data="buyers"
+                                            :data="orders"
                                             :limit="1"
-                                            @pagination-change-page="getBuyers"
+                                            @pagination-change-page="getTrashOrders"
                                         />
                                     </div>
                                 </nav>

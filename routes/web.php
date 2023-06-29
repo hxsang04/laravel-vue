@@ -37,8 +37,11 @@ Route::prefix('admin')->middleware('auth:admin')->group( function () {
 
     Route::get('/order', [OrderController::class, 'index'])->name('order');
     Route::get('/order/show/{id}', [OrderController::class, 'show'])->name('order.show');
+    Route::get('/order/trash/', [OrderController::class, 'trash'])->name('order.trash');
 
     Route::get('/buyer', [BuyerController::class, 'index'])->name('buyer');
+    Route::get('/buyer/trash/', [BuyerController::class, 'trash'])->name('buyer.trash');
+
 
 });
 

@@ -15,4 +15,9 @@ class BuyerController extends Controller
         return inertia('Admin/Buyer/List');
     }
 
+    public function trash(){
+        return inertia('Admin/Buyer/Trash');
+       
+    }
+
 }

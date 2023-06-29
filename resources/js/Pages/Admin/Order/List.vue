@@ -60,17 +60,6 @@ onMounted(() => {
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Order</h2>
         </template>
-        
-        <template #button>
-            <div class="page-title-actions">
-                <a :href="route('product.create')" class="btn-shadow btn-hover-shine mr-3 btn btn-primary">
-                    <span class="btn-icon-wrapper pr-2 opacity-7">
-                        <font-awesome-icon icon="fa fa-plus fa-w-20"/>
-                    </span>
-                    Create
-                </a>
-            </div>
-        </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -78,7 +67,7 @@ onMounted(() => {
                     <div class="col-md-12">
                         <div class="main-card mb-3 card">
                             
-                            <TableHeader :href="route('product.trash')" @search="getOrders" v-model="keyword">
+                            <TableHeader :href="route('order.trash')" @search="getOrders" v-model="keyword">
                                 <template #link>
                                     <font-awesome-icon icon="fa fa-trash" />
                                     <span class="pl-1">Trash</span>

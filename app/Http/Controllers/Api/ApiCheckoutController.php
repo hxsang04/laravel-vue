@@ -11,7 +11,6 @@ use App\Models\Order;
 class ApiCheckoutController extends Controller
 {
     public function placeOrder(CheckOutRequest $request){
-        
         $data = $request->validated();
         $data['total_price'] = convertToNumber(session('total_price'));
         $data['user_id'] = \Auth::id();

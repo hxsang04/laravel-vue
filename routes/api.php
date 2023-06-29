@@ -39,9 +39,16 @@ Route::post('/product/import', [ApiProductController::class, 'import'])->name('a
 Route::get('/orders', [ApiOrderController::class, 'orders'])->name('api.orders');
 Route::get('/order/show/{id}', [ApiOrderController::class, 'show'])->name('api.order.show');
 Route::post('/order/delete/{id}', [ApiOrderController::class, 'delete'])->name('api.order.delete');
+Route::get('/orders/trash', [ApiOrderController::class, 'trash'])->name('api.orders.trash');
+Route::post('/order/restore/{id}', [ApiOrderController::class, 'restore'])->name('api.order.restore');
+Route::post('/order/remove/{id}', [ApiOrderController::class, 'remove'])->name('api.order.remove');
 Route::get('/order/export', [ApiOrderController::class, 'export'])->name('api.order.export');
 
 Route::get('/buyers', [ApiBuyerController::class, 'buyers'])->name('api.buyers');
+Route::post('/buyer/delete/{id}', [ApiBuyerController::class, 'delete'])->name('api.buyer.delete');
+Route::get('/buyers/trash', [ApiBuyerController::class, 'trash'])->name('api.buyers.trash');
+Route::post('/buyer/restore/{id}', [ApiBuyerController::class, 'restore'])->name('api.buyer.restore');
+Route::post('/buyer/remove/{id}', [ApiBuyerController::class, 'remove'])->name('api.buyer.remove');
 Route::get('/buyer/export', [ApiBuyerController::class, 'export'])->name('api.buyer.export');
 
 Route::get('/carts', [ApiCartController::class, 'cart'])->name('api.cart');

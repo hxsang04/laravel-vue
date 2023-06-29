@@ -23,4 +23,9 @@ class OrderController extends Controller
         return inertia('Admin/Order/Show');
     }
 
+    public function trash(){
+        return inertia('Admin/Order/Trash');
+       
+    }
+
 }

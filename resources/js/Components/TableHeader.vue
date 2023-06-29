@@ -5,7 +5,6 @@ defineProps({
     href: String,
     modelValue: {
         type: String,
-        required: true,
     },
 
 });
